@@ -63,10 +63,10 @@ const AdminBranches = () => {
             header: 'Actions',
             render: (b) => (
                 <div style={{ display: 'flex', gap: '10px' }}>
-                    <button className="secondary" onClick={() => handleEdit(b.id)}>
+                    <button style={{ width: '100px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="secondary" onClick={() => handleEdit(b.id)}>
                         Edit
                     </button>
-                    <button className="contrast" onClick={() => handleDelete(b.id)}>
+                    <button style={{ width: '100px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="contrast" onClick={() => handleDelete(b.id)}>
                         Delete
                     </button>
                 </div>
