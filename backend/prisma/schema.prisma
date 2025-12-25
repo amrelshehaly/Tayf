@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SuperAdmin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("superadmin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Branch {
+  id           Int           @id @default(autoincrement())
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  branchAdmins BranchAdmin[]
+  rawMaterials RawMaterial[]
+  products     Product[]
+
+  @@index([name])
+}
+
+model BranchAdmin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("branchadmin")
+  branchId  Int
+  branch    Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId])
+  @@index([email])
+}
+
+model RawMaterial {
+  id        Int             @id @default(autoincrement())
+  name      String
+  stock     Float           @default(0)
+  branchId  Int
+  branch    Branch          @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  recipes   ProductRecipe[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([branchId])
+  @@index([name])
+  @@index([branchId, name])
+}
+
+model Product {
+  id          Int             @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  imageUrl    String?
+  branchId    Int
+  branch      Branch          @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  recipe      ProductRecipe[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([branchId])
+  @@index([name])
+  @@index([branchId, name])
+}
+
+model ProductRecipe {
+  id               Int         @id @default(autoincrement())
+  productId        Int
+  product          Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rawMaterialId    Int
+  rawMaterial      RawMaterial @relation(fields: [rawMaterialId], references: [id], onDelete: Cascade)
+  quantityRequired Float
+
+  @@unique([productId, rawMaterialId])
+  @@index([productId])
+  @@index([rawMaterialId])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  userType  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId, userType])
+}
+
