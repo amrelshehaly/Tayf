@@ -15,7 +15,7 @@ const login = () => {
             if (user.role === 'superadmin') {
                 navigate('/branches', { replace: true });
             } else {
-                navigate('/branch-admin', { replace: true });
+                navigate('/materials', { replace: true });
             }
         }
     }, [isAuthenticated, user, navigate]);

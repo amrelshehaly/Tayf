@@ -34,7 +34,7 @@ export const useLogin = () => {
       if (user.role === 'superadmin') {
         navigate('/branches');
       } else {
-        navigate('/branch-admin');
+        navigate('/materials');
       }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed');

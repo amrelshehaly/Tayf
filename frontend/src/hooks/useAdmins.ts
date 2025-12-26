@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import api from '../api';
 import { BranchAdmin, CreateBranchAdminData, UpdateBranchAdminData } from '../types';
 
@@ -19,23 +19,23 @@ export const useBranchAdmins = () => {
     const addAdmin = async (admin: CreateBranchAdminData) => {
         setLoading(true);
         setError(null);
-        const response = await api.post('/branch-admins', admin);
-        setAdmins([...admins, response.data]);
+        await api.post('/branch-admins', admin);
+        await getAdmins(); 
         setLoading(false);
     }
 
     const updateAdmin = async (id: number, admin: UpdateBranchAdminData) => {
         setLoading(true);
         setError(null);
-        const response = await api.put(`/branch-admins/${id}`, admin);
-        setAdmins(admins.map(a => a.id === id ? response.data : a));
+        await api.put(`/branch-admins/${id}`, admin);
+        await getAdmins();
         setLoading(false);
     }
 
     const deleteAdmin = async (id: number) => {
         setLoading(true);
         setError(null);
-        const response = await api.delete(`/branch-admins/${id}`);
+        await api.delete(`/branch-admins/${id}`);
         setAdmins(admins.filter(a => a.id !== id));
         setLoading(false);
     }
